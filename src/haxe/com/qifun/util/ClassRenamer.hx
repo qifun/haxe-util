@@ -6,10 +6,6 @@ class ClassRenamer
 {
 
   #if macro
-  public static function addDefinedPrefix(definedKey:String):Array<Field> return
-  {
-    addPrefix(Context.definedValue(definedKey));
-  }
 
   public static function addPrefix(prefix:Null<String>):Array<Field> return
   {
