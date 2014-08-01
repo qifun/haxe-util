@@ -1,1 +1,1 @@
-addSbtPlugin("com.qifun" % "sbt-haxe" % "1.0.0")
+addSbtPlugin("com.qifun" % "sbt-haxe" % "1.1.0-SNAPSHOT")
