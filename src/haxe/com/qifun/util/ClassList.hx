@@ -11,20 +11,27 @@ class ClassList
       var f = sys.io.File.write(fileName, false);
       try
       {
+        var classList:Array<String> = [];
         for( t in types )
         {
           switch( t )
           {
             case TInst(c, _):
             {
-              f.writeString(c.toString() + "\n");
+              classList.push(c.toString() + "\n");
             }
             case TEnum(e, _):
             {
-              f.writeString(e.toString() + "\n"); 
+              classList.push(e.toString() + "\n");
             }
             default:
           }
+        }
+        for (str in classList)
+        {
+          if (str == "haxe.io.Output\n" || str == "haxe.io.Input\n" || str == "cs.internal._HxObject.HxObject\n")
+            continue;
+          f.writeString(str);
         }
       }
       catch (e:Dynamic)
