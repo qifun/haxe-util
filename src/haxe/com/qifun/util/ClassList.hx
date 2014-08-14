@@ -29,9 +29,19 @@ class ClassList
         }
         for (str in classList)
         {
-          if (str == "haxe.io.Output\n" || str == "haxe.io.Input\n" || str == "cs.internal._HxObject.HxObject\n")
-            continue;
-          f.writeString(str);
+          switch(str)
+          { 
+            case "haxe.io.Output\n":
+            case "haxe.io.Input\n":
+            case "cs.internal._HxObject.HxObject\n":
+            case "java.internal._HxObject.HxObject\n":
+            case "haxe.ds.IntMap\n":
+            default: 
+            {
+              f.writeString(str);
+              trace(str);
+            }
+          }
         }
       }
       catch (e:Dynamic)
