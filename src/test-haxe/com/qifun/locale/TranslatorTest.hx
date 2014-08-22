@@ -3,7 +3,7 @@ package com.qifun.locale;
 import haxe.macro.*;
 using com.qifun.locale.Translator;
 
-class TestTranslator extends haxe.unit.TestCase {
+class TranslatorTest extends haxe.unit.TestCase {
 
 	macro static function setupLocale():Expr
 	{
@@ -34,5 +34,5 @@ class TestTranslator extends haxe.unit.TestCase {
 		#end
 	}
 	#end
-	
+
 }
