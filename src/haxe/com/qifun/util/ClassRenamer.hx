@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
- package com.qifun.util;
+package com.qifun.util;
 import haxe.macro.*;
 import haxe.macro.Expr;
 
