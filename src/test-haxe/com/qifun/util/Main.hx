@@ -8,6 +8,7 @@ class Main
   static function testAll()
   {
     var runner = new TestRunner();
+    runner.add(new EqualsAndHashCodeTest());
     runner.add(new TranslatorTest());
     var isSuccess = runner.run();
     if (!isSuccess)
