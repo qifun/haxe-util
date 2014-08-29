@@ -112,7 +112,10 @@ class EqualsBuilder
   {
     var classType = Context.getLocalClass().get();
     var fields = Context.getBuildFields();
-    fields.push(equalsMethod(methodName, classType, fields));
+    if (!classType.isInterface)
+    {
+      fields.push(equalsMethod(methodName, classType, fields));
+    }
     fields;
   }
 

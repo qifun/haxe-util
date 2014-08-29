@@ -134,7 +134,10 @@ class HashCodeBuilder
   {
     var classType = Context.getLocalClass().get();
     var fields = Context.getBuildFields();
-    fields.push(hashCodeMethod(methodName, classType, fields));
+    if (!classType.isInterface)
+    {
+      fields.push(hashCodeMethod(methodName, classType, fields));
+    }
     fields;
   }
 
