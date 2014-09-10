@@ -37,30 +37,20 @@ class ClassList
           {
             case TInst(c, _):
             {
-              classList.push(c.toString() + "\n");
+              classList.push(c.toString());
             }
             case TEnum(e, _):
             {
-              classList.push(e.toString() + "\n");
+              classList.push(e.toString());
             }
             default:
           }
         }
         for (str in classList)
         {
-          switch(str)
-          {
-            case "haxe.io.Output\n":
-            case "haxe.io.Input\n":
-            case "cs.internal._HxObject.HxObject\n":
-            case "java.internal._HxObject.HxObject\n":
-            case "haxe.ds.IntMap\n":
-            default:
-            {
-              f.writeString(str);
-              trace(str);
-            }
-          }
+          f.writeString(str);
+          f.writeString("\n");
+          trace(str);
         }
       }
       catch (e:Dynamic)
