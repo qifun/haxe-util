@@ -8,6 +8,10 @@ haxeCSharpSettings
 
 haxeJavaSettings
 
+autoScalaLibrary := false
+
+crossPaths := false
+
 for (c <- Seq(CSharp, TestCSharp)) yield {
   haxeOptions in c ++= Seq("-D", "dll")
 }
