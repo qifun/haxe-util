@@ -7,3 +7,7 @@ version := "0.1.0-SNAPSHOT"
 haxeCSharpSettings
 
 haxeJavaSettings
+
+autoScalaLibrary := false
+
+crossPaths := false
