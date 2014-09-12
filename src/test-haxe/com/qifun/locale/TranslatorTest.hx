@@ -1,7 +1,7 @@
 package com.qifun.locale;
 
 import haxe.macro.*;
-using com.qifun.locale.Translator;
+using com.qifun.util.locale.Translator;
 
 class TranslatorTest extends haxe.unit.TestCase {
 

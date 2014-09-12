@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
-package com.qifun.locale;
+package com.qifun.util.locale ;
 import haxe.macro.*;
 import haxe.macro.Expr;
 
@@ -31,7 +31,7 @@ class Translator {
 
 	macro public static function translate(self:ExprOf<String>):ExprOf<String> return {
 		#if run_time_translation
-		runTimeTranslate(self, defaultDictionary, macro com.qifun.locale.Translator.runTimeLocale);
+		runTimeTranslate(self, defaultDictionary, macro com.qifun.util.locale.Translator.runTimeLocale);
 		#else
 		compileTimeTranslate(self, defaultDictionary, Context.definedValue("locale"));
 		#end
@@ -63,7 +63,7 @@ class Translator {
 
 	static var defaultDictionary(default, never) = {
 		var d = new Map<String, Map<String, String>>();
-		merge(d, "zh_CN.GBK", readJsonFile("com/qifun/locale/translation.zh_CN.GBK.json"));
+		merge(d, "zh_CN.GBK", readJsonFile("com/qifun/util/locale/translation.zh_CN.GBK.json"));
 		d;
 	}
 
