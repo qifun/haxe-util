@@ -12,6 +12,10 @@ autoScalaLibrary := false
 
 crossPaths := false
 
+for (c <- Seq(CSharp, TestCSharp)) yield {
+  haxeOptions in c ++= Seq("-D", "dll")
+}
+
 homepage := Some(url(s"https://github.com/qifun/${name.value}"))
 
 startYear := Some(2014)
@@ -34,7 +38,7 @@ pomExtra :=
   <developers>
     <developer>
       <id>Atry</id>
-      <name>杨博</name>
+      <name>�</name>
       <timezone>+8</timezone>
       <email>pop.atry@gmail.com</email>
     </developer>
