@@ -16,6 +16,8 @@ for (c <- Seq(CSharp, TestCSharp)) yield {
   haxeOptions in c ++= Seq("-D", "dll")
 }
 
+testFrameworks += new TestFramework("com.qifun.haxeUnit.HaxeUnitFramework")
+
 homepage := Some(url(s"https://github.com/qifun/${name.value}"))
 
 startYear := Some(2014)
