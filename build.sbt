@@ -12,9 +12,9 @@ autoScalaLibrary := false
 
 crossPaths := false
 
-for (c <- Seq(CSharp, TestCSharp)) yield {
-  haxeOptions in c ++= Seq("-D", "dll")
-}
+haxeOptions in CSharp ++= Seq("-D", "dll")
+
+haxeOptions in TestCSharp ++= Seq("-main", "com.qifun.util.Main")
 
 testFrameworks += new TestFramework("com.qifun.haxeUnit.HaxeUnitFramework")
 
