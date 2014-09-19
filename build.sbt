@@ -4,6 +4,8 @@ name := "haxe-util"
 
 version := "0.1.2-SNAPSHOT"
 
+haxeSettings
+
 haxeCSharpSettings
 
 haxeJavaSettings
