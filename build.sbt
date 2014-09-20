@@ -4,6 +4,8 @@ name := "haxe-util"
 
 version := "0.1.2-SNAPSHOT"
 
+haxeSettings
+
 haxeCSharpSettings
 
 haxeJavaSettings
@@ -12,9 +14,11 @@ autoScalaLibrary := false
 
 crossPaths := false
 
-for (c <- Seq(CSharp, TestCSharp)) yield {
-  haxeOptions in c ++= Seq("-D", "dll")
-}
+haxeOptions in CSharp ++= Seq("-D", "dll")
+
+haxeOptions in TestCSharp ++= Seq("-main", "com.qifun.util.Main")
+
+testFrameworks += new TestFramework("com.qifun.haxeUnit.HaxeUnitFramework")
 
 homepage := Some(url(s"https://github.com/qifun/${name.value}"))
 
