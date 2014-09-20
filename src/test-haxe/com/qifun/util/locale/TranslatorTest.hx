@@ -1,4 +1,4 @@
-package com.qifun.locale;
+package com.qifun.util.locale;
 
 import haxe.macro.*;
 using com.qifun.util.locale.Translator;
@@ -13,7 +13,7 @@ class TranslatorTest extends haxe.unit.TestCase {
 
 	macro static function setupTranslation():Expr
 	{
-		Translator.addTranslationFile("zh_CN.UTF-8", "com/qifun/locale/test-translation.zh_CN.UTF-8.json");
+		Translator.addTranslationFile("zh_CN.UTF-8", "com/qifun/util/locale/test-translation.zh_CN.UTF-8.json");
 		return macro null;
 	}
 

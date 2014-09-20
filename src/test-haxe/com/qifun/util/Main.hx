@@ -1,5 +1,5 @@
 package com.qifun.util;
-import com.qifun.locale.TranslatorTest;
+import com.qifun.util.locale.TranslatorTest;
 import haxe.unit.TestRunner;
 
 class Main
