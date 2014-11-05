@@ -21,18 +21,18 @@ package com.qifun.util;
 
 import haxe.ds.Vector;
 
-/*
+/**
   梅森旋转算法伪随机数生成器(The Mersenne Twister pseudo-random number generator)
   论文：http://www.math.sci.hiroshima-u.ac.jp/~m-mat/MT/ARTICLES/mt.pdf
   @author 张修羽
-*/
+**/
 class Random
 {
-  private static var SIZE(default, null):UInt = 624; 
+  private static inline var SIZE:UInt = 624; 
   
-  private static var PERIOD(default, null):UInt = 397; 
+  private static inline var PERIOD:UInt = 397; 
   
-  private static var DIFF(default, null):UInt = SIZE - PERIOD;
+  private static inline var DIFF:UInt = SIZE - PERIOD;
   
   private static inline function isOdd(n:UInt):UInt return n & 1;
   
@@ -51,9 +51,9 @@ class Random
   
 
   
-  public function generate_numbers():Void
+  public function generateNumbers():Void
   {
-    var m:Array<UInt> = [0, 0x9908b0df];
+    var m:Vector<UInt> = Vector.fromArrayCopy([0, 0x9908b0df]);
     var i:Int = -1;
     var y:Int;
     
@@ -61,13 +61,13 @@ class Random
     while (++i < DIFF)
     {
       y = m32(mersenneTwister.get(i)) | l31(mersenneTwister.get(i + 1));
-      mersenneTwister.set(i, mersenneTwister.get(i + PERIOD) ^ (y >> 1) ^ m[isOdd(y)]);
+      mersenneTwister.set(i, mersenneTwister.get(i + PERIOD) ^ (y >> 1) ^ m.get(isOdd(y)));
     }
 
     function unroll()
     {
       y = m32(mersenneTwister.get(i)) | l31(mersenneTwister.get(i + 1));
-      mersenneTwister.set(i, mersenneTwister.get(i - DIFF) ^ (y >> 1) ^ m[isOdd(y)]);
+      mersenneTwister.set(i, mersenneTwister.get(i - DIFF) ^ (y >> 1) ^ m.get(isOdd(y)));
     }
     
     i = DIFF;
@@ -82,7 +82,7 @@ class Random
 
     // i = [623]
     y = m32(mersenneTwister.get(SIZE - 1)) | l31(mersenneTwister.get(SIZE - 1));
-    mersenneTwister.set(SIZE - 1, mersenneTwister.get(PERIOD - 1) ^ (y >> 1) ^ m[isOdd(y)]);
+    mersenneTwister.set(SIZE - 1, mersenneTwister.get(PERIOD - 1) ^ (y >> 1) ^ m.get(isOdd(y)));
   }
   
   public function resetSeed(seed:Int):Void return
@@ -100,7 +100,7 @@ class Random
   public function rand():Int return {
     
     if (index == 0)
-      generate_numbers();
+      generateNumbers();
 
     var res:UInt = mersenneTwister[index];
 
