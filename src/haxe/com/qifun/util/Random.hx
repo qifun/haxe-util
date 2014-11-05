@@ -28,19 +28,19 @@ import haxe.ds.Vector;
 **/
 class Random
 {
-  private static inline var SIZE:UInt = 624; 
+  private static inline var SIZE:Int = 624; 
   
-  private static inline var PERIOD:UInt = 397; 
+  private static inline var PERIOD:Int = 397; 
   
-  private static inline var DIFF:UInt = SIZE - PERIOD;
+  private static inline var DIFF:Int = SIZE - PERIOD;
   
-  private static inline function isOdd(n:UInt):UInt return n & 1;
+  private static inline function isOdd(n:Int):Int return n & 1;
   
-  private static inline function m32(n:UInt):UInt return 0x80000000 & n;
+  private static inline function m32(n:Int):Int return 0x80000000 & n;
   
-  private static inline function l31(n:UInt):UInt return 0x7FFFFFFF & n;
+  private static inline function l31(n:Int):Int return 0x7FFFFFFF & n;
   
-  private var mersenneTwister:Vector<UInt> = new Vector<UInt>(SIZE);
+  private var mersenneTwister:Vector<Int> = new Vector<Int>(SIZE);
   
   private var index:Int;
   
@@ -53,7 +53,7 @@ class Random
   
   public function generateNumbers():Void
   {
-    var m:Vector<UInt> = Vector.fromArrayCopy([0, 0x9908b0df]);
+    var m:Vector<Int> = Vector.fromArrayCopy([0, 0x9908b0df]);
     var i:Int = -1;
     var y:Int;
     
@@ -61,13 +61,13 @@ class Random
     while (++i < DIFF)
     {
       y = m32(mersenneTwister.get(i)) | l31(mersenneTwister.get(i + 1));
-      mersenneTwister.set(i, mersenneTwister.get(i + PERIOD) ^ (y >> 1) ^ m.get(isOdd(y)));
+      mersenneTwister.set(i, mersenneTwister.get(i + PERIOD) ^ (y >>> 1) ^ m.get(isOdd(y)));
     }
 
     function unroll()
     {
       y = m32(mersenneTwister.get(i)) | l31(mersenneTwister.get(i + 1));
-      mersenneTwister.set(i, mersenneTwister.get(i - DIFF) ^ (y >> 1) ^ m.get(isOdd(y)));
+      mersenneTwister.set(i, mersenneTwister.get(i - DIFF) ^ (y >>> 1) ^ m.get(isOdd(y)));
     }
     
     i = DIFF;
@@ -82,7 +82,7 @@ class Random
 
     // i = [623]
     y = m32(mersenneTwister.get(SIZE - 1)) | l31(mersenneTwister.get(SIZE - 1));
-    mersenneTwister.set(SIZE - 1, mersenneTwister.get(PERIOD - 1) ^ (y >> 1) ^ m.get(isOdd(y)));
+    mersenneTwister.set(SIZE - 1, mersenneTwister.get(PERIOD - 1) ^ (y >>> 1) ^ m.get(isOdd(y)));
   }
   
   public function resetSeed(seed:Int):Void return
@@ -92,25 +92,25 @@ class Random
     var i = 1;
     while (i < SIZE)
     {
-      mersenneTwister.set(i, 0x6c078965 * (mersenneTwister.get(i - 1) ^ mersenneTwister.get(i - 1) >> 30) + i);
+      mersenneTwister.set(i, 0x6c078965 * (mersenneTwister.get(i - 1) ^ mersenneTwister.get(i - 1) >>> 30) + i);
       ++i;
     }
   }
 
-  public function rand():Int return {
+  public function random():Int return {
     
     if (index == 0)
       generateNumbers();
 
-    var res:UInt = mersenneTwister[index];
+    var res:Int = mersenneTwister[index];
 
-    res ^= res >> 11;
+    res ^= res >>> 11;
     res ^= res << 7 & 0x9d2c5680;
     res ^= res << 15 & 0xefc60000;
-    res ^= res >> 18;
+    res ^= res >>> 18;
 
     if ( ++index == SIZE )
       index = 0;
-    return 0x7FFFFFFF & res;
+    return cast res;
   }
 }
