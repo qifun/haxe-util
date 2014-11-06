@@ -26,7 +26,8 @@ import haxe.ds.Vector;
   论文：http://www.math.sci.hiroshima-u.ac.jp/~m-mat/MT/ARTICLES/mt.pdf
   @author 张修羽
 **/
-class Random
+@:final
+class MersenneTwister
 {
   private static inline var SIZE:Int = 624; 
   
@@ -48,12 +49,9 @@ class Random
   {
     resetSeed(seed);
   }
-  
-
-  
+    
   public function generateNumbers():Void
   {
-    var m:Vector<Int> = Vector.fromArrayCopy([0, 0x9908b0df]);
     var i:Int = -1;
     var y:Int;
     
@@ -61,13 +59,13 @@ class Random
     while (++i < DIFF)
     {
       y = m32(mersenneTwister.get(i)) | l31(mersenneTwister.get(i + 1));
-      mersenneTwister.set(i, mersenneTwister.get(i + PERIOD) ^ (y >>> 1) ^ m.get(isOdd(y)));
+      mersenneTwister.set(i, mersenneTwister.get(i + PERIOD) ^ (y >>> 1) ^ (isOdd(y) * 0x9908b0df));
     }
 
-    function unroll()
+    inline function unroll()
     {
       y = m32(mersenneTwister.get(i)) | l31(mersenneTwister.get(i + 1));
-      mersenneTwister.set(i, mersenneTwister.get(i - DIFF) ^ (y >>> 1) ^ m.get(isOdd(y)));
+      mersenneTwister.set(i, mersenneTwister.get(i - DIFF) ^ (y >>> 1) ^ (isOdd(y) * 0x9908b0df));
     }
     
     i = DIFF;
@@ -82,7 +80,7 @@ class Random
 
     // i = [623]
     y = m32(mersenneTwister.get(SIZE - 1)) | l31(mersenneTwister.get(SIZE - 1));
-    mersenneTwister.set(SIZE - 1, mersenneTwister.get(PERIOD - 1) ^ (y >>> 1) ^ m.get(isOdd(y)));
+    mersenneTwister.set(SIZE - 1, mersenneTwister.get(PERIOD - 1) ^ (y >>> 1) ^ (isOdd(y) * 0x9908b0df));
   }
   
   public function resetSeed(seed:Int):Void return
