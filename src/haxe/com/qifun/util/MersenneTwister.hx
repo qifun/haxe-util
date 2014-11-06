@@ -94,9 +94,17 @@ class MersenneTwister
       ++i;
     }
   }
+  
+  /**
+    生成 [0.0, 1.0) 范围内的随机数
+  **/
+  public function nextFloat():Float return
+  {
+    (nextInt() + 2147483648.0) / 4294967296.0;
+  }
 
-  public function random():Int return {
-    
+  public function nextInt():Int return
+  {
     if (index == 0)
       generateNumbers();
 
