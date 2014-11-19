@@ -50,7 +50,8 @@ class MersenneTwister
     resetSeed(seed);
   }
     
-  public function generateNumbers():Void
+
+  private function generateNumbers():Void
   {
     var i:Int = -1;
     var y:Int;
@@ -58,14 +59,14 @@ class MersenneTwister
     
     while (++i < DIFF)
     {
-      y = m32(mersenneTwister.get(i)) | l31(mersenneTwister.get(i + 1));
-      mersenneTwister.set(i, mersenneTwister.get(i + PERIOD) ^ (y >>> 1) ^ (isOdd(y) * 0x9908b0df));
+      y = m32(mersenneTwister[i]) | l31(mersenneTwister[i + 1]);
+      mersenneTwister[i] = mersenneTwister[i + PERIOD] ^ (y >>> 1) ^ (isOdd(y) * 0x9908b0df);
     }
 
     inline function unroll()
     {
-      y = m32(mersenneTwister.get(i)) | l31(mersenneTwister.get(i + 1));
-      mersenneTwister.set(i, mersenneTwister.get(i - DIFF) ^ (y >>> 1) ^ (isOdd(y) * 0x9908b0df));
+      y = m32(mersenneTwister[i]) | l31(mersenneTwister[i + 1]);
+      mersenneTwister[i] = mersenneTwister[i - DIFF] ^ (y >>> 1) ^ (isOdd(y) * 0x9908b0df);
     }
     
     i = DIFF;
@@ -79,8 +80,8 @@ class MersenneTwister
     }
 
     // i = [623]
-    y = m32(mersenneTwister.get(SIZE - 1)) | l31(mersenneTwister.get(SIZE - 1));
-    mersenneTwister.set(SIZE - 1, mersenneTwister.get(PERIOD - 1) ^ (y >>> 1) ^ (isOdd(y) * 0x9908b0df));
+    y = m32(mersenneTwister[SIZE - 1]) | l31(mersenneTwister[SIZE - 1]);
+    mersenneTwister[SIZE - 1] = mersenneTwister[PERIOD - 1] ^ (y >>> 1) ^ (isOdd(y) * 0x9908b0df);
   }
   
   public function resetSeed(seed:Int):Void return
@@ -90,7 +91,7 @@ class MersenneTwister
     var i = 1;
     while (i < SIZE)
     {
-      mersenneTwister.set(i, 0x6c078965 * (mersenneTwister.get(i - 1) ^ mersenneTwister.get(i - 1) >>> 30) + i);
+      mersenneTwister[i] = 0x6c078965 * (mersenneTwister[i - 1] ^ mersenneTwister[i - 1] >>> 30) + i;
       ++i;
     }
   }
@@ -117,6 +118,6 @@ class MersenneTwister
 
     if ( ++index == SIZE )
       index = 0;
-    return cast res;
+    return res;
   }
 }
