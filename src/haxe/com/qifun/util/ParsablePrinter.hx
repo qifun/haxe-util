@@ -26,7 +26,7 @@ import haxe.macro.Expr;
 using Lambda;
 using StringTools;
 
-class Printer {
+class ParsablePrinter {
 	var tabs:String;
 	var tabString:String;
 
