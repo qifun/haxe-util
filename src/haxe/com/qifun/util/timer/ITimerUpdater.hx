@@ -1,4 +1,4 @@
-package haxe.com.qifun.util.timer;
+package com.qifun.util.timer;
 
 @:nativeGen
 interface ITimerUpdater

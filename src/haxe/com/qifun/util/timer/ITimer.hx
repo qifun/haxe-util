@@ -1,4 +1,4 @@
-package haxe.com.qifun.util.timer;
+package com.qifun.util.timer;
 
 import com.qifun.util.ISubscriber;
 

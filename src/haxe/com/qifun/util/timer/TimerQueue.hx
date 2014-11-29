@@ -1,4 +1,4 @@
-package haxe.com.qifun.util.timer;
+package com.qifun.util.timer;
 import dotnet.system.threading.Timer;
 import unityengine.MonoBehaviour;
 import unityengine.Time;
@@ -7,11 +7,9 @@ import de.polygonal.ds.Prioritizable64;
 import de.polygonal.ds.PriorityQueue64;
 import haxe.Int64;
 
-/*
- * 
- * 这个是Timer实现
- * 
- * */
+/**
+ 这个是`ITimer`实现
+**/
 private class Timer implements ITimer implements Prioritizable64
 {
   public function new(creator:TimerQueue, durationMilliseconds:Int, updater:ITimerUpdater)
@@ -101,14 +99,12 @@ private class Timer implements ITimer implements Prioritizable64
   public var position:Int;
 }
 
-/*
- * 
- * 这个是TimerQueue的实现，用优先队列和Update进行。
- * 
- * */
+/**
+  这个是`TimerQueue`的实现，用优先队列和`Update`进行。
+**/
 @:final
 @:nativeGen
-@:allow(com.qifun.sun.entity.runners.util.Timer)
+@:allow(com.qifun.util.timer.Timer)
 class TimerQueue extends MonoBehaviour implements ITimerQueue
 {
   public var currentMilliSeconds(get, never):Int64;
