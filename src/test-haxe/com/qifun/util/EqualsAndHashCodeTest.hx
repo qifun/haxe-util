@@ -25,18 +25,6 @@ class Final<Left> extends Pair<Left, String>
 {
 }
 
-#if java
-@:autoBuild(com.qifun.util.HashCodeBuilder.build("hashCode"))
-@:autoBuild(com.qifun.util.EqualsBuilder.build("equals"))
-#elseif cs
-@:autoBuild(com.qifun.util.HashCodeBuilder.build("GetHashCode"))
-@:autoBuild(com.qifun.util.EqualsBuilder.build("Equals"))
-#end
-@:nativeGen
-interface IEntity #if java extends java.internal.IEquatable #end
-{
-}
-
 class Pair<Left, Right> implements IEntity
 {
   var left:Left;

@@ -1,7 +1,14 @@
 package com.qifun.util.timer;
+#if (cs && unity)
 import dotnet.system.threading.Timer;
 import unityengine.MonoBehaviour;
 import unityengine.Time;
+#elseif java
+import java.util.concurrent.ScheduledExecutorService;
+import java.lang.Runnable;
+import java.lang.System;
+#end
+
 import com.qifun.util.ISubscriber;
 import de.polygonal.ds.Prioritizable64;
 import de.polygonal.ds.PriorityQueue64;
@@ -29,10 +36,12 @@ private class Timer implements ITimer implements Prioritizable64
   
   public function onUpdate():Void
   {
+    #if cs
     if (this.updater != null)
     {
       this.updater.update(this.elapsedSeconds, this.durationSeconds);
     }
+    #end
   }
   
   public function onFixedUpdate():Void
@@ -102,11 +111,18 @@ private class Timer implements ITimer implements Prioritizable64
 /**
   这个是`TimerQueue`的实现，用优先队列和`Update`进行。
 **/
-@:final
+//@:final
 @:nativeGen
 @:allow(com.qifun.util.timer.Timer)
-class TimerQueue extends MonoBehaviour implements ITimerQueue
+class TimerQueue implements ITimerQueue #if (cs && unity) extends MonoBehaviour #end
 {
+  public function new()
+  {
+    #if (cs && unity)
+    super();
+    #end
+  }
+  
   public var currentMilliSeconds(get, never):Int64;
 
   function get_currentMilliSeconds():Int64  return
@@ -126,34 +142,54 @@ class TimerQueue extends MonoBehaviour implements ITimerQueue
     this._isPaused;
   }
   
+  //实现ITimerQueue
+  public function newOneshotTimer(durationMilliseconds:Int):ITimer 
+  {    
+    var timer :Timer = new Timer(this, durationMilliseconds, null);
+    timer.startTime = this.currentMilliSeconds;
+    return timer;
+  }
+
+  public function newIntervalTimer(durationMilliseconds:Int, updater:ITimerUpdater):ITimer 
+  {
+    var timer :Timer = new Timer(this, durationMilliseconds, updater);
+    timer.startTime = this.currentMilliSeconds;
+    return timer;
+  }
+  
+  #if (cs && unity)
   function Update():Void
   {
     if (!isPaused)
     {
-      this._currentMilliSeconds = Int64.ofInt(Std.int(Time.time * 1000));
-      if (!this.timerExpireQueue.isEmpty())
+      updateTimers();
+      for (timer in timerExpireQueue)
       {
-        while (!timerExpireQueue.isEmpty())
-        {
-          var timer:Timer = timerExpireQueue.peek();
-          if (Int64.compare(timer.expiredTime(), this.currentMilliSeconds) < 0)
-          {
-            timer.onExpired();
-            timerExpireQueue.dequeue();
-          }
-          else
-          {
-            //后头的都比currentMilliSecond大，直接跳出循环了。
-            break;
-          }
-        }
-        
-        #if cs
-        for (timer in timerExpireQueue)
-        {
-          timer.onUpdate();
-        }
-        #end
+        timer.onUpdate();
+      }
+    }
+  }
+  #end
+  
+  public function updateTimers()
+  {
+    #if (cs && unity)
+    this._currentMilliSeconds = Int64.ofInt(Std.int(Time.time * 1000));
+    #elseif java
+    this._currentMilliSeconds = System.currentTimeMillis();
+    #end
+    while (!timerExpireQueue.isEmpty())
+    {
+      var timer:Timer = timerExpireQueue.peek();
+      if (Int64.compare(timer.expiredTime(), this.currentMilliSeconds) < 0)
+      {
+        timer.onExpired();
+        timerExpireQueue.dequeue();
+      }
+      else
+      {
+        //后头的都比currentMilliSecond大，直接跳出循环了。
+        break;
       }
     }
   }
@@ -168,35 +204,80 @@ class TimerQueue extends MonoBehaviour implements ITimerQueue
       }
     }
   }
-
-  //实现ITimerQueue
-  public function newOneshotTimer(durationMilliseconds:Int):ITimer 
-  {
-    var timer :Timer = new Timer(this, durationMilliseconds, null);
-    timer.startTime = this.currentMilliSeconds;
-    return timer;
-  }
-
-  public function newIntervalTimer(durationMilliseconds:Int, updater:ITimerUpdater):ITimer 
-  {
-    var timer :Timer = new Timer(this, durationMilliseconds, updater);
-    timer.startTime = this.currentMilliSeconds;
-    return timer;
-  }
   
   // 以下函数提供给 Timer 作为友元函数
-  private function runTimer(timer:Timer)
+  private function runTimer(timer:Timer):Void
   {
+    #if java
+    this.timerScheduler.schedule(
+      new ScheduleTimerExpired(this)
+      , Int64.ofInt(timer.durationMilliseconds)
+      , MILLISECONDS);
+    #end
     timer.priority = Int64.neg(timer.expiredTime());
     this.timerExpireQueue.enqueue(timer);
   }
   
-  private function cancelTimer(timer:Timer)
+  private function cancelTimer(timer:Timer):Void
   {
     this.timerExpireQueue.remove(timer);
   }
+  
+  #if java
+  private var timerScheduler:ScheduledExecutorService;
+  #end
   
   private var timerExpireQueue:PriorityQueue64<Timer> = new PriorityQueue64<Timer>();
   private var _currentMilliSeconds:Int64;
   private var _isPaused:Bool = false;
 }
+
+
+/***
+  空 `Timer` 的实现
+**/
+@:nativeGen
+@:allow(com.qifun.util.timer.Timer)
+class ImmediateTimerQueue extends TimerQueue
+{
+  public function new(timePeriodMilliSecond:Int)
+  {
+    super();
+    this.timePeriod = timePeriodMilliSecond;
+  }
+  
+  public function run():Void
+  {
+    this._currentMilliSeconds = Int64.ofInt(0);
+    while (!timerExpireQueue.isEmpty())
+    {
+      for (timer in timerExpireQueue)
+      {
+        timer.onFixedUpdate();
+        if (Int64.compare(timer.expiredTime(), this.currentMilliSeconds) < 0)
+        {
+          timer.onExpired();
+          timerExpireQueue.dequeue();
+        }
+      }
+      this._currentMilliSeconds = Int64.add(this._currentMilliSeconds, Int64.ofInt(this.timePeriod));
+    }
+  }
+  
+  private var timePeriod:Int;
+}
+
+#if java
+private class ScheduleTimerExpired implements Runnable
+{
+  public function new(timerQueue:TimerQueue)
+  {
+    this.timerQueue = timerQueue;
+  }
+  public function run():Void
+  {
+    this.timerQueue.updateTimers();
+  }
+  private var timerQueue:TimerQueue;
+}
+#end

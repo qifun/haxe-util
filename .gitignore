@@ -1,3 +1,4 @@
 target/
 .*
 bin/
+/net-lib-unity.hxml
