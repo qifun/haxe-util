@@ -4,12 +4,6 @@ name := "haxe-util"
 
 version := "0.1.2-SNAPSHOT"
 
-haxeSettings
-
-haxeCSharpSettings
-
-haxeJavaSettings
-
 autoScalaLibrary := false
 
 crossPaths := false
