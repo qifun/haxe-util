@@ -12,6 +12,14 @@ haxeOptions in CSharp ++= Seq("-D", "dll")
 
 haxeOptions in TestCSharp ++= Seq("-main", "com.qifun.util.Main")
 
+for (c <- Seq(Compile, Test, CSharp, TestCSharp)) yield {
+  haxeOptions in c ++=
+    Seq(
+	  "-lib", "polygonal-ds",
+	  "-lib", "polygonal-printf"
+	)
+}
+
 libraryDependencies += "com.qifun.sbt-haxe" %% "test-interface" % "0.1.0" % Test
 
 homepage := Some(url(s"https://github.com/qifun/${name.value}"))
