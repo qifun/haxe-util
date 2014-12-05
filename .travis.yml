@@ -14,3 +14,5 @@ before_install:
  - travis_retry haxelib install nodejs
  - travis_retry haxelib install hxjava
  - travis_retry haxelib install hxcs
+ - travis_retry haxelib install polygonal-printf
+ - travis_retry haxelib git polygonal-ds https://github.com/qifun/ds.git master src
